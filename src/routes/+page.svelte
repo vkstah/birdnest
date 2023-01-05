@@ -5,19 +5,12 @@
 	import type { PageData } from "./$types";
 
 	export let data: PageData;
-	export let drones: Drone[] = data.drones;
-	export let violatorDrones: Drone[] = data.drones.filter((drone: Drone) => {
-		const positionX = drone.positionX;
-		const positionY = drone.positionY;
-		const distanceSquared = Math.pow(positionX - 250000, 2) + Math.pow(positionY - 250000, 2);
-		const radiusSquared = Math.pow(100000, 2);
-
-		if (distanceSquared < radiusSquared) return true;
-	});
+	export let drones: Drone[] = data.droneData.drones;
 
 	onMount(async () => {
 		async function getDrones() {
-			invalidate("/api/drones");
+			invalidate("app:server");
+			drones = data.droneData.drones;
 		}
 
 		const interval = setInterval(getDrones, 5000);
@@ -27,10 +20,43 @@
 	});
 </script>
 
-<div class="grid">
-	<div>Total drones: {drones.length}</div>
-	<div>Violators: {violatorDrones.length}</div>
-	{#each drones as drone}
-		<div>{drone.serialNumber}</div>
-	{/each}
+<div class="grid grid-cols-2">
+	<div>
+		<h2>Total current drones: {drones.length}</h2>
+		<table class="text-left">
+			<thead>
+				<tr>
+					<th>Serial number</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{#each drones as drone}
+						<tr class="odd:bg-gray-100">
+							<td>{drone.serialNumber}</td>
+						</tr>
+					{/each}
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<h2>Violators: {data.violators.length}</h2>
+		<table class="text-left">
+			<thead>
+				<tr>
+					<th>Serial number</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					{#each data.violators as violator}
+						<tr class="odd:bg-gray-100">
+							<td>{violator.serialNumber}</td>
+						</tr>
+					{/each}
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
