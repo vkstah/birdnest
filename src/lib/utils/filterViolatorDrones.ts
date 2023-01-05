@@ -6,12 +6,12 @@ import type { Drone } from "src/types";
  * @returns Array of drones that are inside the forbidden area.
  */
 export const filterViolatorDrones = (drones: Drone[]) => {
-	return drones.filter((drone: Drone) => {
-		const positionX = drone.positionX;
-		const positionY = drone.positionY;
-		const distanceSquared = Math.pow(positionX - 250000, 2) + Math.pow(positionY - 250000, 2);
-		const radiusSquared = Math.pow(100000, 2);
+  return drones.filter((drone: Drone) => {
+    const positionX = drone.positionX;
+    const positionY = drone.positionY;
+    const distanceSquared = Math.pow(positionX - 250000, 2) + Math.pow(positionY - 250000, 2);
+    const radiusSquared = Math.pow(100000, 2);
 
-		if (distanceSquared < radiusSquared) return true;
-	});
+    if (distanceSquared < radiusSquared) return true;
+  });
 };
