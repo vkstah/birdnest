@@ -1,62 +1,33 @@
 <script lang="ts">
-  import { invalidate } from "$app/navigation";
   import type { Drone } from "src/types";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
-  export let drones: Drone[] = data.droneData.drones;
+  export let drones: Drone[] = [];
+  export let timestamp: string = "";
 
-  onMount(async () => {
-    async function getDrones() {
-      invalidate("app:server");
-      drones = data.droneData.drones;
-    }
+  onMount(() => {
+    const ws = new WebSocket(data.webSocketUrl);
 
-    const interval = setInterval(getDrones, 5000);
-    getDrones();
+    ws.addEventListener("message", (message) => {
+      const receivedMessage = JSON.parse(message.data);
+      const data = receivedMessage.data;
 
-    return () => clearInterval(interval);
+      drones = data.drones;
+
+      const date = new Date(data.timestamp);
+      timestamp = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    });
   });
 </script>
 
-<div class="grid grid-cols-2">
+<div class="max-w-[400px] px-12 py-6 border border-slate-300 rounded">
+  <h2 class="font-semibold">Current drones</h2>
+  <span class="transition-colors bg-red-500">Timestamp: {timestamp}</span>
   <div>
-    <h2>Total current drones: {drones.length}</h2>
-    <table class="text-left">
-      <thead>
-        <tr>
-          <th>Serial number</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          {#each drones as drone}
-            <tr class="odd:bg-gray-100">
-              <td>{drone.serialNumber}</td>
-            </tr>
-          {/each}
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div>
-    <h2>Violators: {data.violators.length}</h2>
-    <table class="text-left">
-      <thead>
-        <tr>
-          <th>Serial number</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          {#each data.violators as violator}
-            <tr class="odd:bg-gray-100">
-              <td>{violator.serialNumber}</td>
-            </tr>
-          {/each}
-        </tr>
-      </tbody>
-    </table>
+    {#each drones as drone}
+      <div>{drone.serialNumber}</div>
+    {/each}
   </div>
 </div>
