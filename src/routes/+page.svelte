@@ -13,18 +13,19 @@
     ws.addEventListener("message", (message) => {
       const receivedMessage = JSON.parse(message.data);
       const data = receivedMessage.data;
+      const dronesSnapshot = data.dronesSnapshot;
 
-      drones = data.drones;
+      drones = dronesSnapshot.drones;
 
-      const date = new Date(data.timestamp);
+      const date = new Date(dronesSnapshot.timestamp);
       timestamp = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
     });
   });
 </script>
 
-<div class="max-w-[400px] px-12 py-6 border border-slate-300 rounded">
+<div class="max-w-[400px] m-8 px-12 py-6 border border-slate-300 rounded">
   <h2 class="font-semibold">Current drones</h2>
-  <span class="transition-colors bg-red-500">Timestamp: {timestamp}</span>
+  <span class="transition-colors">Timestamp: {timestamp}</span>
   <div>
     {#each drones as drone}
       <div>{drone.serialNumber}</div>
