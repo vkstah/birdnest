@@ -1,6 +1,6 @@
 # Birdnest
 
-This repository contains the source code for the Reaktor Summer 2023 Developer Trainee assignment [Birdnest](https://assignments.reaktor.com/birdnest/).
+This repository contains the source code for the Reaktor Summer 2023 Developer Trainee assignment [Birdnest](https://assignments.reaktor.com/birdnest/). You can find the backend repository [here](https://github.com/vkstah/birdnest-backend).
 
 ## Developing
 
