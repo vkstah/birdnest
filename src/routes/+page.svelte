@@ -14,16 +14,35 @@
   export let violators: Violator[] = [];
 
   onMount(() => {
-    const ws = new WebSocket(data.webSocketUrl);
+    const connect = () => {
+      const ws = new WebSocket(data.webSocketUrl);
 
-    ws.addEventListener("message", (message) => {
-      const receivedMessage = JSON.parse(message.data);
-      const data = receivedMessage.data;
-      dronesSnapshot = data.dronesSnapshot;
-      violators = data.violators.sort((a: Violator, b: Violator) => {
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      ws.addEventListener("open", (event) => {
+        console.log("WebSocket connected to the server!");
       });
-    });
+
+      ws.addEventListener("message", (event) => {
+        const receivedMessage = JSON.parse(event.data);
+        const data = receivedMessage.data;
+        dronesSnapshot = data.dronesSnapshot;
+        violators = data.violators.sort((a: Violator, b: Violator) => {
+          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        });
+      });
+
+      ws.addEventListener("close", (event) => {
+        console.log("WebSocket closed. Attempting to reconnect in 1 second...");
+        setTimeout(() => {
+          connect();
+        }, 1000);
+      });
+
+      ws.addEventListener("error", (event) => {
+        console.log("Something went wrong with the WebSocket. Closing WebSocket...");
+        ws.close();
+      });
+    };
+    connect();
   });
 </script>
 
