@@ -13,12 +13,12 @@ npm run dev
 npm run dev -- --open
 ```
 
-## Implementation
+## Notes
 
-The application can be accessed here: `to be determined.`
+The application can be accessed here: [Birdnest Application](https://birdnest-blue.vercel.app/)
 
-The backend is deployed into [railway.app](https://railway.app/), the frontend is deployed into [Vercel](https://vercel.com/).
+The backend is deployed to [railway.app](https://railway.app/), the frontend is deployed to [Vercel](https://vercel.com/).
 
 Some caveats about the application:
 
-- The application will stop fetching data from the Reaktor drones API after 30 minutes of not receiving traffic. Traffic in this case is counted as a connection to the WebSocketServer, which means that the page does not need to be refreshed for the timer to reset.
+- The application will stop fetching data from the Reaktor drones API after 30 minutes of not receiving traffic. Traffic in this case is counted as a connection to the WebSocketServer, which means that the page does not need to be refreshed for the traffic timer to reset.

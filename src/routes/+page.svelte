@@ -56,15 +56,15 @@
           are highlighted.
         </p>
         <p class="absolute top-6 right-6 text-xs">
-          Latest update: <span class="font-medium"
-            >{formatTime(new Date(dronesSnapshot.timestamp))}</span
-          >
+          Latest update: <span class="font-medium">
+            {formatTime(new Date(dronesSnapshot.timestamp))}
+          </span>
         </p>
-        <div class="overflow-x-scroll w-full lg:overflow-x-auto">
+        <div class="overflow-x-scroll lg:overflow-x-auto mt-8 w-full">
           {#if dronesSnapshot.error}
-            Error
+            <p class="text-sm">{dronesSnapshot.error}</p>
           {:else}
-            <table class="text-left mt-8">
+            <table class="text-left">
               <thead>
                 <tr>
                   {#each ["SERIAL NUMBER", "X-POS", "Y-POS"] as tableHeading}
