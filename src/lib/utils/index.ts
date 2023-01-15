@@ -33,6 +33,11 @@ const leadingZero = (num: number) => `0${num}`.slice(-2);
 export const formatTime = (date: Date): string =>
   [date.getHours(), date.getMinutes(), date.getSeconds()].map(leadingZero).join(":");
 
+/**
+ * Sort violators by date. Newest violators come first.
+ * @param violators Array of violators.
+ * @returns Array of violators.
+ */
 export const sortViolatorsByDate = (violators: Violator[]) => {
   return violators.sort((a: Violator, b: Violator) => {
     return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();

@@ -4,6 +4,7 @@
   import { formatTime, isDroneViolating, sortViolatorsByDate } from "$lib/utils";
   import type { DronesSnaphot, Violator } from "src/types";
   import { onMount } from "svelte";
+  import { fly, fade } from "svelte/transition";
   import type { PageData } from "./$types";
 
   export let data: PageData;
@@ -110,7 +111,7 @@
             </thead>
             <tbody>
               {#each violators as violator}
-                <tr class="hover:bg-blue-100">
+                <tr class="hover:bg-blue-100" out:fade>
                   <td class="px-4 py-2 text-sm font-medium"
                     >{formatTime(new Date(violator.timestamp))}</td
                   >
