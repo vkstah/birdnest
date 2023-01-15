@@ -1,24 +1,20 @@
 <script lang="ts">
   import ContentBox from "$lib/components/ContentBox.svelte";
   import Loading from "$lib/components/Loading.svelte";
-  import { formatTime, isDroneViolating } from "$lib/utils";
+  import { formatTime, isDroneViolating, sortViolatorsByDate } from "$lib/utils";
   import type { DronesSnaphot, Violator } from "src/types";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
   export let data: PageData;
-  export let dronesSnapshot: DronesSnaphot = {
-    timestamp: "",
-    error: "",
-    drones: []
-  };
-  export let violators: Violator[] = [];
+  export let dronesSnapshot: DronesSnaphot = data.dronesSnapshot;
+  export let violators: Violator[] = data.violators;
   export let isLoadingWebSocketConnection: boolean;
 
   onMount(() => {
     const connect = () => {
       isLoadingWebSocketConnection = true;
-      const ws = new WebSocket(data.webSocketUrl);
+      const ws = new WebSocket(`wss://${data.serverUrl}`);
 
       ws.addEventListener("open", (event) => {
         isLoadingWebSocketConnection = false;
@@ -27,11 +23,9 @@
 
       ws.addEventListener("message", (event) => {
         const receivedMessage = JSON.parse(event.data);
-        const data = receivedMessage.data;
-        dronesSnapshot = data.dronesSnapshot;
-        violators = data.violators.sort((a: Violator, b: Violator) => {
-          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-        });
+        const webSocketData = receivedMessage.data;
+        dronesSnapshot = webSocketData.dronesSnapshot;
+        violators = sortViolatorsByDate(webSocketData.violators);
       });
 
       ws.addEventListener("close", (event) => {
