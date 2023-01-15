@@ -7,7 +7,11 @@
   import type { PageData } from "./$types";
 
   export let data: PageData;
-  export let dronesSnapshot: DronesSnaphot = data.dronesSnapshot;
+  export let dronesSnapshot: DronesSnaphot = {
+    timestamp: "",
+    error: "",
+    drones: []
+  };
   export let violators: Violator[] = data.violators;
   export let isLoadingWebSocketConnection: boolean;
 
@@ -46,7 +50,7 @@
 
 <div class="container mx-auto px-2 py-6 lg:pt-24 lg:pb-36">
   <div class="grid grid-cols-8 gap-6 lg:gap-12">
-    <div class="col-span-8 relative">
+    <div class="col-span-8 max-w-[750px] relative">
       <ContentBox>
         <h2 class="text-slate-900 font-semibold text-2xl">Drones 🤖</h2>
         <p class="mt-2 text-sm leading-relaxed max-w-[600px]">
@@ -63,6 +67,8 @@
             <p class="text-sm">{dronesSnapshot.error}</p>
           {:else if isLoadingWebSocketConnection}
             <Loading text="Establishing a connection" />
+          {:else if dronesSnapshot.timestamp === "" && dronesSnapshot.drones.length === 0}
+            <Loading text="Waiting for data from the server" />
           {:else}
             <table class="text-left">
               <thead>
