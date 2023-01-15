@@ -1,5 +1,6 @@
 <script lang="ts">
   import ContentBox from "$lib/components/ContentBox.svelte";
+  import Loading from "$lib/components/Loading.svelte";
   import { formatTime, isDroneViolating } from "$lib/utils";
   import type { DronesSnaphot, Violator } from "src/types";
   import { onMount } from "svelte";
@@ -12,12 +13,15 @@
     drones: []
   };
   export let violators: Violator[] = [];
+  export let isLoadingWebSocketConnection: boolean;
 
   onMount(() => {
     const connect = () => {
+      isLoadingWebSocketConnection = true;
       const ws = new WebSocket(data.webSocketUrl);
 
       ws.addEventListener("open", (event) => {
+        isLoadingWebSocketConnection = false;
         console.log("WebSocket connected to the server!");
       });
 
@@ -48,7 +52,7 @@
 
 <div class="container mx-auto px-2 py-6 lg:pt-24 lg:pb-36">
   <div class="grid grid-cols-8 gap-6 lg:gap-12">
-    <div class="col-span-8 lg:col-span-5 relative">
+    <div class="col-span-8 relative">
       <ContentBox>
         <h2 class="text-slate-900 font-semibold text-2xl">Drones 🤖</h2>
         <p class="mt-2 text-sm leading-relaxed max-w-[600px]">
@@ -63,6 +67,8 @@
         <div class="overflow-x-scroll lg:overflow-x-auto mt-8 w-full">
           {#if dronesSnapshot.error}
             <p class="text-sm">{dronesSnapshot.error}</p>
+          {:else if isLoadingWebSocketConnection}
+            <Loading text="Establishing a connection" />
           {:else}
             <table class="text-left">
               <thead>
@@ -86,9 +92,6 @@
         </div>
       </ContentBox>
     </div>
-    <div class="col-span-8 lg:col-span-3">
-      <ContentBox>2</ContentBox>
-    </div>
     <div class="col-span-8">
       <ContentBox>
         <h2 class="font-semibold text-xl">Violators 🚫</h2>
@@ -96,7 +99,6 @@
           This is the list of drones and their pilots that did not respect the zone. The closest
           position is displayed for each violator.
         </p>
-
         <div class="mt-8 overflow-x-scroll w-full lg:overflow-x-auto">
           <table class="text-left">
             <thead>
