@@ -104,7 +104,7 @@
           <table class="text-left">
             <thead>
               <tr>
-                {#each ["LAST SEEN", "SERIAL NUMBER", "X-POS", "Y-POS", "NAME", "EMAIL", "PHONE NUMBER"] as tableHeading}
+                {#each ["LAST VIOLATION", "SERIAL NUMBER", "X-POS", "Y-POS", "NAME", "EMAIL", "PHONE NUMBER"] as tableHeading}
                   <th class="px-4 py-2 text-sm">{tableHeading}</th>
                 {/each}
               </tr>
